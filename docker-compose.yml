@@ -1,0 +1,31 @@
+version: '3.4'
+
+services:
+  web:
+    image: nginx
+    ports:
+      - "8181:80"
+    volumes:
+      - ./:/var/www/html/
+      - ./shared/:/etc/nginx/conf.d/
+    links:
+      - php
+
+  php:
+    build: ./
+#    image: php:7.2-fpm
+    volumes:
+      - ./:/var/www/html/
+
+  pgsql:
+    container_name: psql
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: ${DB_NAME:-art}
+      POSTGRES_USER: ${DB_USER:-art}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-art}
+    volumes:
+      - ./shared/:/docker-entrypoint-initdb.d/
