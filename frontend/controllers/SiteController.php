@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 
+use app\models\EntryForm;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
@@ -256,5 +257,27 @@ class SiteController extends Controller
         return $this->render('resendVerificationEmail', [
             'model' => $model
         ]);
+    }
+    /*
+     * Test function
+     *
+     * @return none
+     */
+    public function actionSay($message = "Hello") {
+        return $this->render('say', ['message' => $message]);
+    }
+    /*
+     * Test function
+     *
+     * @return none
+     */
+    public function actionEntry() {
+        $model = new EntryForm();
+        if ($model->load(Yii::$app->request->post()) && $model->validate())
+        {
+            return $this->render('entry-confirm', ['model' => $model]);
+        } else {
+            return $this->render('entry', ['model' => $model]);
+        }
     }
 }
