@@ -42,11 +42,18 @@ class VerifyEmailForm extends Model
      * Verify email
      *
      * @return User|null the saved model or null if saving fails
+     * @throws \yii\base\Exception
      */
     public function verifyEmail()
     {
         $user = $this->_user;
         $user->status = User::STATUS_ACTIVE;
-        return $user->save(false) ? $user : null;
+        $userToReturn = $user->save(false) ? $user : null;
+
+        if ($userToReturn !== null) {
+            Wallets::createNewWallet(WalletsType::USD, 'Default USD Wallet', $user->id);
+        }
+
+        return $userToReturn;
     }
 }

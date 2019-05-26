@@ -10,39 +10,25 @@ class m190525_163523_wallets extends Migration
     /**
      * {@inheritdoc}
      */
-    public function up()
+    public function safeUp()
     {
-        $this->createTable('wallets', [
+        $this->createTable('{{%wallets}}', [
             'id' => $this->primaryKey(),
-            'user_id' => $this->integer()->notNull(),
-            'wallet_name' => $this->string()->notNull()->unique(),
-            'currency' => $this->integer()->notNull(),
-            'sum' => $this->float()->defaultValue(0),
-            ]);
+            'id_user' => $this->integer()->notNull(),
+            'wallet_name' => $this->string(),
+            'id_wallets_type' => $this->integer()->notNull(),
+            'sum' => $this->money()->defaultValue(0),
+        ]);
+
+        $this->addForeignKey('fk_wallets_used_id','{{%wallets}}', 'id_user', '{{%user}}', 'id');
+        $this->addForeignKey('fk_wallet_wtype_id','{{%wallets}}', 'id_wallets_type', '{{%wallets_type}}', 'id');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function down()
+    public function safeDown()
     {
-        echo "m190525_163523_wallets cannot be reverted.\n";
-
-        return false;
+        $this->dropTable('{{%wallets}}');
     }
-
-    /*
-    // Use up()/down() to run migration code without a transaction.
-    public function up()
-    {
-
-    }
-
-    public function down()
-    {
-        echo "m190525_163523_wallets cannot be reverted.\n";
-
-        return false;
-    }
-    */
 }

@@ -36,6 +36,7 @@ AppAsset::register($this);
         ],
     ]);
     $menuItems = [
+        ['label' => 'GII', 'url' => ['/gii']],
         ['label' => 'Home', 'url' => ['/site/index']],
         ['label' => 'About', 'url' => ['/site/about']],
         ['label' => 'Contact', 'url' => ['/site/contact']],
@@ -44,7 +45,7 @@ AppAsset::register($this);
         $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
-        $menuItems[] = ['label' => 'Wallets', 'url' => ['/wallet/wallet']];
+        $menuItems[] = ['label' => 'Wallets', 'url' => ['/wallets/index']];
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
