@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "wallets_type".
@@ -15,11 +16,13 @@ use Yii;
  */
 class WalletsType extends \yii\db\ActiveRecord
 {
-    public const USD = 1;
-    public const BTC = 2;
-    public const ETH = 3;
-    public const DOGE = 4;
-    public const LTC = 5;
+    public static $types = [
+        'USD' => 1,
+        'BTC' => 2,
+        'ETH' => 3,
+        'DOGE' => 4,
+        'LTC' => 5,
+    ];
 
     /**
      * {@inheritdoc}
@@ -60,5 +63,9 @@ class WalletsType extends \yii\db\ActiveRecord
     public function getWallets()
     {
         return $this->hasMany(Wallet::className(), ['id_wallets_type' => 'id']);
+    }
+
+    public static function getTypesArray() {
+        return array_flip(static::$types);
     }
 }

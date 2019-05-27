@@ -51,7 +51,7 @@ class VerifyEmailForm extends Model
         $userToReturn = $user->save(false) ? $user : null;
 
         if ($userToReturn !== null) {
-            Wallets::createNewWallet(WalletsType::USD, 'Default USD Wallet', $user->id);
+            Wallets::createNewWallet(WalletsType::$types['USD'], 'Default USD Wallet', $user->id);
         }
 
         return $userToReturn;

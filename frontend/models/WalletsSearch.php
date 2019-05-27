@@ -21,6 +21,7 @@ class WalletsSearch extends Wallets
     {
         return [
             [['id', 'id_user', 'id_wallets_type'], 'integer'],
+            [['short_name'], 'string', 'length' => [1, 5]],
             [['wallet_name'], 'safe'],
             [['sum'], 'number'],
         ];
@@ -53,6 +54,11 @@ class WalletsSearch extends Wallets
             'query' => $query,
         ]);
 
+        $dataProvider->sort->attributes['short_name'] = [
+            'asc' => ['wt.short_name' => SORT_ASC],
+            'desc' => ['wt.short_name' => SORT_DESC],
+        ];
+
         $this->load($params);
 
         if (!$this->validate()) {
@@ -65,11 +71,11 @@ class WalletsSearch extends Wallets
         $query->andFilterWhere([
             'id' => $this->id,
             'id_user' => $this->id_user,
-            'id_wallets_type' => $this->id_wallets_type,
             'sum' => $this->sum,
         ]);
 
-        $query->andFilterWhere(['ilike', 'wallet_name', $this->wallet_name]);
+        $query->andFilterWhere(['ilike', 'wallet_name', $this->wallet_name])
+            ->andFilterWhere(['ilike', 'wt.short_name', $this->short_name]);
 
         return $dataProvider;
     }

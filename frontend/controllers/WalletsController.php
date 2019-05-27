@@ -61,13 +61,17 @@ class WalletsController extends Controller
      * Creates a new Wallets model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
+     * @throws \yii\base\Exception
      */
     public function actionCreate()
     {
         $model = new Wallets();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->id_user = $model->id_user ?? Yii::$app->user->id;
+            if ($model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('create', [
@@ -86,7 +90,11 @@ class WalletsController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if (Yii::$app->user->id != $model->id_user) {
+            Yii::$app->session->setFlash('error', "Permission denied");
+            return $this->redirect(['wallets/index']);
+        }
+        else if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -104,6 +112,11 @@ class WalletsController extends Controller
      */
     public function actionDelete($id)
     {
+        if (Yii::$app->user->id != $model->id_user) {
+            Yii::$app->session->setFlash('error', "Permission denied");
+            return $this->redirect(['wallets/index']);
+        }
+
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
@@ -123,5 +136,21 @@ class WalletsController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionSend($id)
+    {
+        $model = new \common\models\Wallets();
+
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->validate()) {
+                // form inputs are valid, do something here
+                return;
+            }
+        }
+
+        return $this->render('send', [
+            'model' => $model,
+        ]);
     }
 }

@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Wallets', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Wallet', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -24,19 +24,28 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
             'id',
             'wallet_name',
             [
-                'attribute' => 'id_wallets_type',
+                'attribute' => 'short_name',
                 'value' => function($data) {
                     return $data->walletsType->short_name;
                 },
             ],
             'sum',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'header' => 'Action',
+                'visibleButtons' => [
+                    'update' => function ($model) {
+                        return $model->id_user == Yii::$app->user->id;
+                    },
+                    'delete' => function ($model) {
+                        return $model->id_user == Yii::$app->user->id;
+                    },
+                ],
+            ],
         ],
     ]); ?>
 
