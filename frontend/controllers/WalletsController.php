@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\models\WalletsType;
 use Yii;
 use common\models\Wallets;
 use frontend\models\WalletsSearch;
@@ -138,19 +139,11 @@ class WalletsController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-    public function actionSend($id)
+    public function actionSend()
     {
-        $model = new \common\models\Wallets();
+        WalletsType::refreshRates();
+    }
+    public function actionRates() {
 
-        if ($model->load(Yii::$app->request->post())) {
-            if ($model->validate()) {
-                // form inputs are valid, do something here
-                return;
-            }
-        }
-
-        return $this->render('send', [
-            'model' => $model,
-        ]);
     }
 }

@@ -39,6 +39,7 @@ AppAsset::register($this);
         ['label' => 'GII', 'url' => ['/gii']],
         ['label' => 'Home', 'url' => ['/site/index']],
         ['label' => 'About', 'url' => ['/site/about']],
+        ['label' => 'Rates', 'url' => ['/wallet-type/index']],
         ['label' => 'Contact', 'url' => ['/site/contact']],
     ];
     if (Yii::$app->user->isGuest) {

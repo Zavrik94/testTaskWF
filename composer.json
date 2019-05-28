@@ -19,7 +19,8 @@
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
         "tigrov/yii2-pgsql": "dev-master",
-        "vlucas/phpdotenv": "^3.3@dev"
+        "vlucas/phpdotenv": "^3.3@dev",
+      "ext-json": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

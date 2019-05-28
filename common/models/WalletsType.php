@@ -3,7 +3,9 @@
 namespace common\models;
 
 use Yii;
+use yii\base\Exception;
 use yii\helpers\ArrayHelper;
+use yii\base\ErrorException;
 
 /**
  * This is the model class for table "wallets_type".
@@ -38,8 +40,8 @@ class WalletsType extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['short_name'], 'required'],
-            [['type_name', 'short_name'], 'string', 'max' => 255],
+            [['rates'], 'number'],
+            [['type_name', 'short_name', 'update_timestamp'], 'string', 'max' => 255],
             [['short_name'], 'unique'],
             [['type_name'], 'unique'],
         ];
@@ -54,6 +56,8 @@ class WalletsType extends \yii\db\ActiveRecord
             'id' => 'ID',
             'type_name' => 'Type Name',
             'short_name' => 'Short Name',
+            'rates' => 'Rates',
+            'update_timestamp' => 'Update Timestamp',
         ];
     }
 
