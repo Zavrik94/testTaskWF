@@ -17,17 +17,19 @@ class m190525_135233_wallets_type extends Migration
             'type_name' => $this->string()->unique(),
             'short_name' => $this->string()->unique()->notNull(),
             'rates' => $this->float(),
-            'update_timestamp' => $this->timestamp()
+            'update_timestamp' => $this->timestamp(),
+            'is_update' => $this->boolean(),
+
         ]);
 
         $this->batchInsert('{{%wallets_type}}', ['id', 'short_name', 'type_name', 'rates'], [
             [1, 'USD', 'US Dollar', 1],
         ]);
-        $this->batchInsert('{{%wallets_type}}', ['id', 'short_name', 'type_name'], [
-            [2, 'BTC', 'Bitcoin'],
-            [3, 'ETH', 'Etherium'],
-            [4, 'DOGE', 'Dogecoin'],
-            [5, 'LTC', 'Litecoin'],
+        $this->batchInsert('{{%wallets_type}}', ['id', 'short_name', 'type_name', 'is_update'], [
+            [2, 'BTC', 'Bitcoin', true],
+            [3, 'ETH', 'Etherium', true],
+            [4, 'DOGE', 'Dogecoin', true],
+            [5, 'LTC', 'Litecoin', true],
         ]);
     }
 

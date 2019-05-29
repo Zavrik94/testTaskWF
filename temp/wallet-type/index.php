@@ -3,36 +3,24 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\helpers\Url;
-use yii\web\View;
 use \yii\widgets\Pjax;
-use \common\models\WalletsType;
 
 /* @var $this yii\web\View */
-/* @var $searchModel frontend\models\WalletsTypeSearch */
+/* @var $searchModel frontend\controllers\WalletsTypeSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $upd_js = '
     $.pjax.defaults.timeout = false;
     $("#rates-upd").click(function updRates() {
         $.ajax({
-            url: "' . Url::to('@web/coinlayer/') . '",
+            url: "' . yii\helpers\Url::to('@web/coinlayer/') . '",
             success: function() {
                 $.pjax.reload({container:"#upd-rates"});
             }
         });
     });
-
-    function change_is_update(id) {
-        var is_update = $("#" + id).prop("checked");
-    
-        $.ajax({
-            type: "POST",
-            url: "' . Yii::$app->request->baseUrl. '/wallet-type/upd-is-upd' . '",
-            data: {id:id, is_update:is_update},
-        });
-    };
 ';
-$this->registerJs($upd_js, View::POS_END);
+$this->registerJs($upd_js, yii\web\View::POS_END);
 
 $this->title = 'Wallets Types';
 $this->params['breadcrumbs'][] = $this->title;
@@ -58,12 +46,12 @@ $this->params['breadcrumbs'][] = $this->title;
                     'format' => ['date', 'php:M d Y H:i e'],
                 ],
                 [
-                    'attribute' => 'is_update',
-                    'format' => 'raw',
-                    'value' => function ($model, $index) {
-                        return Html::checkbox('is_update', $model->is_update,
-                            ['onclick' => "change_is_update($index)", 'id' => $index]);
-                    },
+                    'class' => 'yii\grid\ActionColumn',
+                    'header' => 'Action',
+                    'visibleButtons' => [
+                        'update' => false,
+                        'delete' => false,
+                    ],
                 ],
             ],
         ]); ?>

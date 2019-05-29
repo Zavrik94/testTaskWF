@@ -20,7 +20,6 @@ class WalletsTypeSearch extends WalletsType
             [['id'], 'integer'],
             [['type_name', 'short_name', 'update_timestamp'], 'safe'],
             [['rates'], 'number'],
-            [['is_update'], 'boolean'],
         ];
     }
 
@@ -62,12 +61,11 @@ class WalletsTypeSearch extends WalletsType
         $query->andFilterWhere([
             'id' => $this->id,
             'rates' => $this->rates,
-            'update_timestamp' => $this->update_timestamp,
-            'is_update' => $this->is_update,
         ]);
 
         $query->andFilterWhere(['ilike', 'type_name', $this->type_name])
             ->andFilterWhere(['ilike', 'short_name', $this->short_name])
+            ->andFilterWhere(['ilike', 'update_timestamp', $this->update_timestamp])
             ->andFilterWhere(['>' , 'id', 1]);
 
         return $dataProvider;

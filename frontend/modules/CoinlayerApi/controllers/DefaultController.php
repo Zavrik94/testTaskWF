@@ -24,7 +24,7 @@ class DefaultController extends Controller
         if ($response['success'] === true) {
             $curRates = $wtype::find()->all();
             foreach ($curRates as &$cur) {
-                if ($cur['short_name'] !== 'USD' && $cur['rates'] !== $response['rates'][$cur['short_name']]) {
+                if ($cur['is_update'] && $cur['short_name'] !== 'USD' && $cur['rates'] !== $response['rates'][$cur['short_name']]) {
                     $cur->rates = $response['rates'][$cur['short_name']];
                     $cur->update_timestamp = $dateTime->format('Y-m-d H:i:s');
                     echo '<pre>'; var_export($cur->update()); echo '</pre>';

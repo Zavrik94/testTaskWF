@@ -43,6 +43,18 @@ class WalletTypeController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
+    /**
+     * Displays a single WalletsType model.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionView($id)
+    {
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
+    }
 
     /**
      * Finds the WalletsType model based on its primary key value.
@@ -58,16 +70,5 @@ class WalletTypeController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
-    }
-
-    public function actionUpdIsUpd() {
-        $data = Yii::$app->request->post();
-        $wt = new WalletsType();
-        $cur = $wt::findOne($data['id']);
-        $cur->is_update = filter_var($data['is_update'], FILTER_VALIDATE_BOOLEAN);
-        $cur->save();
-        return var_export($wt::findOne($data['id']));
-        //$response = file_get_contents(Yii::$app->request->post());
-        //$response = json_decode($response, true);
     }
 }

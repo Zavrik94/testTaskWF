@@ -31,7 +31,7 @@ class WalletsType extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'wallets_type';
+        return '{{%wallets_type}}';
     }
 
     /**
@@ -41,7 +41,7 @@ class WalletsType extends \yii\db\ActiveRecord
     {
         return [
             [['rates'], 'number'],
-            [['type_name', 'short_name', 'update_timestamp'], 'string', 'max' => 255],
+            [['type_name', 'short_name'], 'string', 'max' => 255],
             [['short_name'], 'unique'],
             [['type_name'], 'unique'],
         ];
@@ -58,6 +58,7 @@ class WalletsType extends \yii\db\ActiveRecord
             'short_name' => 'Short Name',
             'rates' => 'Rates',
             'update_timestamp' => 'Update Timestamp',
+            'is_update' => 'Enable update'
         ];
     }
 
