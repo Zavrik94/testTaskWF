@@ -3,7 +3,6 @@
 namespace common\models;
 
 use Yii;
-use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "wallets".
@@ -30,7 +29,7 @@ class Wallets extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_user', 'wallet_name', 'id_wallets_type'], 'required'],
+            [['id_user', 'id_wallets_type'], 'required'],
             [['id_user', 'id_wallets_type'], 'default', 'value' => null],
             [['id_user', 'id_wallets_type'], 'integer'],
             [['sum'], 'number'],
@@ -76,14 +75,10 @@ class Wallets extends \yii\db\ActiveRecord
         return $this->hasOne(WalletsType::className(), ['id' => 'id_wallets_type']);
     }
 
-    public static function getMyWallets() {
-        $wallets = new Wallets();
-
-        $mywallets = $wallets::find()->select(['id', 'wallet_name' ,'sum'])->where(['id_user' => Yii::$app->user->id])->all();
-        $arrToReturn = [];
-        foreach ($mywallets as $wallet) {
-            $arrToReturn = ArrayHelper::merge($arrToReturn, [$wallet['id'] => $wallet['id'] . ' ' . $wallet['wallet_name'] . '(' . $wallet['sum'] . ')']);
-        }
-        return $arrToReturn;
+    public static function getAllWallets() {
+        return static::find()
+            ->joinWith('user u')
+            ->asArray()
+            ->all();
     }
 }

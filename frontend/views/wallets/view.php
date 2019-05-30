@@ -36,7 +36,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'id_user',
             'wallet_name',
-            'id_wallets_type',
+            [
+                'attribute' => 'short_name',
+                'value' => function($data) {
+                    return $data->walletsType->short_name;
+                },
+            ],
             'sum',
         ],
     ]) ?>

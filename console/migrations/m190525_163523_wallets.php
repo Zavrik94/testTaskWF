@@ -17,7 +17,7 @@ class m190525_163523_wallets extends Migration
             'id_user' => $this->integer()->notNull(),
             'wallet_name' => $this->string(),
             'id_wallets_type' => $this->integer()->notNull(),
-            'sum' => $this->money()->defaultValue(0),
+            'sum' => $this->float()->defaultValue(0),
         ]);
 
         $this->addForeignKey('fk_wallets_used_id','{{%wallets}}', 'id_user', '{{%user}}', 'id');

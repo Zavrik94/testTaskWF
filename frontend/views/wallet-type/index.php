@@ -34,7 +34,7 @@ $upd_js = '
 ';
 $this->registerJs($upd_js, View::POS_END);
 
-$this->title = 'Wallets Types';
+$this->title = 'Currency rates to USD';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="wallets-type-index">

@@ -65,9 +65,6 @@ class WalletTypeController extends Controller
         $wt = new WalletsType();
         $cur = $wt::findOne($data['id']);
         $cur->is_update = filter_var($data['is_update'], FILTER_VALIDATE_BOOLEAN);
-        $cur->save();
-        return var_export($wt::findOne($data['id']));
-        //$response = file_get_contents(Yii::$app->request->post());
-        //$response = json_decode($response, true);
+        return var_export($cur->save());
     }
 }

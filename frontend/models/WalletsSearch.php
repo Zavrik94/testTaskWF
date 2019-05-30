@@ -13,6 +13,8 @@ class WalletsSearch extends Wallets
 {
     /** @property string $short_name */
     public $short_name;
+    /** @property string $short_name */
+    public $email;
 
     /**
      * {@inheritdoc}
@@ -22,6 +24,7 @@ class WalletsSearch extends Wallets
         return [
             [['id', 'id_user', 'id_wallets_type'], 'integer'],
             [['short_name'], 'string', 'length' => [1, 5]],
+            [['email'], 'string'],
             [['wallet_name'], 'safe'],
             [['sum'], 'number'],
         ];
@@ -46,7 +49,8 @@ class WalletsSearch extends Wallets
     public function search($params)
     {
         $query = Wallets::find()
-            ->joinWith(['walletsType wt'], false);
+            ->joinWith(['walletsType wt'], false)
+            ->joinWith(['user usr'], false);
 
         // add conditions that should always apply here
 
@@ -57,6 +61,10 @@ class WalletsSearch extends Wallets
         $dataProvider->sort->attributes['short_name'] = [
             'asc' => ['wt.short_name' => SORT_ASC],
             'desc' => ['wt.short_name' => SORT_DESC],
+        ];
+        $dataProvider->sort->attributes['email'] = [
+            'asc' => ['usr.email' => SORT_ASC],
+            'desc' => ['usr.email' => SORT_DESC],
         ];
 
         $this->load($params);
@@ -75,7 +83,8 @@ class WalletsSearch extends Wallets
         ]);
 
         $query->andFilterWhere(['ilike', 'wallet_name', $this->wallet_name])
-            ->andFilterWhere(['ilike', 'wt.short_name', $this->short_name]);
+            ->andFilterWhere(['ilike', 'wt.short_name', $this->short_name])
+            ->andFilterWhere(['ilike', 'usr.email', $this->email]);
 
         return $dataProvider;
     }

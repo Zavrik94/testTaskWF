@@ -25,6 +25,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             'id',
+            [
+                    'attribute' => 'email',
+                    'value' => function($data) {
+                        return $data->user->email;
+                    },
+            ],
             'wallet_name',
             [
                 'attribute' => 'short_name',
@@ -33,7 +39,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
             ],
             'sum',
-
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => 'Action',

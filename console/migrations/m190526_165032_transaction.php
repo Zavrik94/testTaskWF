@@ -17,8 +17,8 @@ class m190526_165032_transaction extends Migration
             'id_wallet_from' => $this->integer()->notNull(),
             'id_wallet_to' => $this->integer()->notNull(),
             'timestamp' => $this->timestamp()->notNull(),
-            'sum_from' => $this->money()->notNull(),
-            'sum_to' => $this->money()->notNull(),
+            'sum_from' => $this->float()->notNull(),
+            'sum_to' => $this->float()->notNull(),
         ]);
 
         $this->addForeignKey('fk_id_wallet_from', '{{%transaction}}', 'id_wallet_from', '{{%wallets}}', 'id');
