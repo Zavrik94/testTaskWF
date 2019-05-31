@@ -2,6 +2,7 @@
 
 namespace frontend\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Transaction;
@@ -11,14 +12,12 @@ use common\models\Transaction;
  */
 class TransactionSearch extends Transaction
 {
-    public $my_wallet_name;
-    public $my_wallet_id;
-    public $my_wallet_sum;
-    public $my_wallet_cur;
-
-    public $send_email;
-    public $send_wallet_cur;
-    public $send_wallet_id;
+    public $email_from;
+    public $email_to;
+    public $cur_from;
+    public $cur_to;
+    public $sender_cname;
+    public $recipient_cname;
 
     /**
      * {@inheritdoc}
@@ -27,7 +26,15 @@ class TransactionSearch extends Transaction
     {
         return [
             [['id', 'id_wallet_from', 'id_wallet_to'], 'integer'],
-            [['timestamp'], 'safe'],
+            [[
+                'timestamp',
+                'email_from',
+                'email_to',
+                'cur_from',
+                'cur_to',
+                'sender_cname',
+                'recipient_cname'],
+            'safe'],
             [['sum_from', 'sum_to'], 'number'],
         ];
     }
@@ -50,14 +57,21 @@ class TransactionSearch extends Transaction
      */
     public function search($params)
     {
+        $pageSize = 50;
+
         $query = Transaction::find()
             ->joinWith([
-            'walletFrom wf' => function($q) {
-                $q->joinWith('user uf', false);
-            },
-            'walletTo wt' => function($q) {
-                $q->joinWith('user ut', false);
-            }], false);
+                'walletFrom wf' => function($q) {
+                    $q->joinWith(['user uf', 'walletsType wtf']);
+                },
+                'walletTo wt' => function($q) {
+                    $q->joinWith(['user ut', 'walletsType wtt']);
+                },
+            ])
+            ->where(['uf.email' => Yii::$app->user->identity->email])
+            ->orderBy(['id' => SORT_DESC])
+            ->limit($pageSize)
+        ;
 
         //'$my_wallet_name $my_wallet_id($my_wallet_cur:$my_wallet_sum)'
         //'$send_email $send_wallet_id($send_wallet_cur)'
@@ -66,6 +80,7 @@ class TransactionSearch extends Transaction
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => ['pageSize' => $pageSize],
         ]);
 
         $this->load($params);
@@ -85,6 +100,7 @@ class TransactionSearch extends Transaction
             'sum_from' => $this->sum_from,
             'sum_to' => $this->sum_to,
         ]);
+//        $query->andFilterWhere('ilike', 'uf.email', $this->email_from);
 
         return $dataProvider;
     }

@@ -54,61 +54,105 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-        <?php $form = ActiveForm::begin([
-            'action' => ['transaction/create'],
+    <?php $form = ActiveForm::begin([
+        'action' => ['transaction/create'],
 //            'options' => ['data' => ['pjax' => true]],
-        ]); ?>
-            <?= $form->field($model, 'walletFrom')
-                ->label('Choose your wallet')
-                ->widget(Select2::classname(), [
-                    'data' => $aw['from'],
-                    'size' => 'md',
-                    'options' => [
-                        'id' => 'from',
-                        'placeholder' => 'Select your wallet'
-                    ],
-                    'pluginOptions' => [
-                        'allowClear' => true
-                    ],
-                ]); ?>
-
-            <?= $form->field($model, 'walletTo')
-                ->label('Choose wallet to send')
-                ->widget(Select2::classname(), [
-                    'data' => $aw['to'],
-                    'size' => 'md',
-                    'options' => [
-                        'id' => 'to',
-                        'placeholder' => "Select receiver's wallet"
-                    ],
-                    'pluginOptions' => [
-                        'allowClear' => true
-                    ],
-                ]); ?>
-
-            <?= $form->field($model, 'sum_from')->textInput(['maxlength' => true, 'id' => 'sum_from']) ?>
-
-            <div class="form-group">
-                <?= Html::submitButton('Send', ['class' => 'btn btn-success', 'id' => 'send']) ?>
-            </div>
-        <?php ActiveForm::end(); ?>
-
-    <?php Pjax::begin(['id' => 'toRefreshGV']); ?>
-        <?= GridView::widget([
-            'dataProvider' => $dataProvider,
-            'filterModel' => $searchModel,
-            'columns' => [
-                'id',
-                'id_wallet_from',
-                'id_wallet_to',
-                'sum_from',
-                'sum_to',
-                [
-                    'attribute' => 'timestamp',
-                    'format' => ['date', 'php:M d Y H:i e'],
+    ]); ?>
+        <?= $form->field($model, 'walletFrom')
+            ->label('Choose your wallet')
+            ->widget(Select2::classname(), [
+                'data' => $aw['from'],
+                'size' => 'md',
+                'options' => [
+                    'id' => 'from',
+                    'placeholder' => 'Select your wallet'
                 ],
+                'pluginOptions' => [
+                    'allowClear' => true
+                ],
+            ]); ?>
+
+        <?= $form->field($model, 'walletTo')
+            ->label('Choose wallet to send')
+            ->widget(Select2::classname(), [
+                'data' => $aw['to'],
+                'size' => 'md',
+                'options' => [
+                    'id' => 'to',
+                    'placeholder' => "Select receiver's wallet"
+                ],
+                'pluginOptions' => [
+                    'allowClear' => true
+                ],
+            ]); ?>
+
+        <?= $form->field($model, 'sum_from')->textInput(['maxlength' => true, 'id' => 'sum_from']) ?>
+
+        <div class="form-group">
+            <?= Html::submitButton('Send', ['class' => 'btn btn-success', 'id' => 'send']) ?>
+        </div>
+    <?php ActiveForm::end(); ?>
+
+    <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
+        'columns' => [
+            [
+                'label' => 'Transaction ID',
+                'attribute' => 'id',
             ],
-        ]); ?>
-    <?php Pjax::end(); ?>
+            [
+                'label' => 'Sender email',
+                'attribute' => 'email_from',
+                'value' => function($data) {
+//                        echo '<pre>'; var_dump($data->getWalletFrom()->one()); echo '</pre>'; die();
+                    return $data->walletFrom->user->email;
+                },
+            ],
+            [
+                'label' => 'Recipient email',
+                'attribute' => 'email_to',
+                'value' => function($data) {
+                    return $data->walletTo[0]->user->email;
+                },
+            ],
+            [
+                'label' => 'Currency of wallet-sender',
+                'attribute' => 'cur_from',
+                'value' => function($data) {
+                    return $data->walletFrom[0]->walletsType->short_name;
+                },
+            ],
+            [
+                'label' => 'Currency of wallet-recipient',
+                'attribute' => 'cur_to',
+                'value' => function($data) {
+                    return $data->walletTo[0]->walletsType->short_name;
+                },
+            ],
+            [
+                'label' => 'Amount in currency of sender',
+                'attribute' => 'sum_from',
+            ],
+            [
+                'label' => 'Amount in currency of recipient',
+                'attribute' => 'sum_to',
+            ],
+            [
+                'label' => 'Wallet-sender custom name',
+                'attribute' => 'sender_cname',
+                'value' => function($data) {
+                    return $data->walletFrom[0]->wallet_name;
+                },
+            ],
+            [
+                'label' => 'Wallet-recipient custom name',
+                'attribute' => 'recipient_cname',
+                'value' => function($data) {
+                    return $data->walletTo[0]->wallet_name;
+                },
+            ],
+        ],
+    ]); ?>
 
 </div>
