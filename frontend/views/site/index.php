@@ -6,6 +6,30 @@ $this->title = 'My Yii Application';
 ?>
 <div class="site-index">
 
+    <div class="container">
+        <h2>3 standard Users</h2>
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td>Login</td>
+                    <td>Password</td>
+                </tr>
+                <tr>
+                    <td>test</td>
+                    <td>testtest</td>
+                </tr>
+                <tr>
+                    <td>user</td>
+                    <td>useruser</td>
+                </tr>
+                <tr>
+                    <td>admin</td>
+                    <td>asdasd</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
     <div class="jumbotron">
         <h1>My Database structure</h1>
 
