@@ -11,7 +11,8 @@ use Yii;
  * @property int $id_user
  * @property string $wallet_name
  * @property int $id_wallets_type
- * @property double $sum
+ * @property float $sum
+ * @property boolean $is_deleted
  */
 class Wallets extends \yii\db\ActiveRecord
 {
@@ -33,6 +34,7 @@ class Wallets extends \yii\db\ActiveRecord
             [['id_user', 'id_wallets_type'], 'default', 'value' => null],
             [['id_user', 'id_wallets_type'], 'integer'],
             [['sum'], 'number'],
+            [['is_deleted'], 'boolean'],
             [['wallet_name'], 'string', 'max' => 255],
             [['wallet_name'], 'unique'],
         ];
@@ -78,6 +80,7 @@ class Wallets extends \yii\db\ActiveRecord
     public static function getAllWallets() {
         return static::find()
             ->joinWith('user u')
+            ->where(['is_deleted' => false])
             ->asArray()
             ->all();
     }

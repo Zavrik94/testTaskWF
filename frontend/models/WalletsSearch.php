@@ -50,7 +50,9 @@ class WalletsSearch extends Wallets
     {
         $query = Wallets::find()
             ->joinWith(['walletsType wt'], false)
-            ->joinWith(['user usr'], false);
+            ->joinWith(['user usr'], false)
+            ->where(['is_deleted' => false])
+        ;
 
         // add conditions that should always apply here
 

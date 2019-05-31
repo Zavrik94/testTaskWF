@@ -92,11 +92,23 @@ class WalletsController extends Controller
         $model = $this->findModel($id);
 
         if (Yii::$app->user->id != $model->id_user) {
-            Yii::$app->session->setFlash('error', "Permission denied");
-            return $this->redirect(['wallets/index']);
+            Yii::$app->session->setFlash('error', 'Permission denied');
+            return $this->redirect(['index']);
         }
-        else if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+
+        $oldIdWalletsType = $model->id_wallets_type;
+
+        if ($model->load(Yii::$app->request->post())) {
+
+            if ($oldIdWalletsType !== $model->id_wallets_type) {
+                $model->sum = WalletsType::convertByTypes($oldIdWalletsType, $model->id_wallets_type, $model->sum);
+            }
+
+            if ($model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                Yii::$app->session->setFlash('error', 'Failed to update');
+            }
         }
 
         return $this->render('update', [
@@ -110,17 +122,26 @@ class WalletsController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
+        $model = $this->findModel($id);
+
         if (Yii::$app->user->id != $model->id_user) {
             Yii::$app->session->setFlash('error', "Permission denied");
-            return $this->redirect(['wallets/index']);
+            return $this->redirect(['index']);
         }
 
-        $this->findModel($id)->delete();
+        $model->is_deleted = true;
+        if ($model->save()) {
+            return $this->redirect(['index']);
+        } else {
+            Yii::$app->session->setFlash('error', 'Failed to delete');
+        }
 
-        return $this->redirect(['index']);
+        return $this->redirect(['view', 'id' => $model->id]);
     }
 
     /**

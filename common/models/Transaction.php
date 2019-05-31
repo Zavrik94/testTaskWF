@@ -11,8 +11,8 @@ use Yii;
  * @property int $id_wallet_from
  * @property int $id_wallet_to
  * @property string $timestamp
- * @property string $sum_from
- * @property string $sum_to
+ * @property float $sum_from
+ * @property float $sum_to
  *
  * @property Wallets $walletFrom
  * @property Wallets $walletTo
@@ -36,7 +36,7 @@ class Transaction extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['walletFrom', 'walletTo', 'id_wallet_from', 'id_wallet_to', 'timestamp', 'sum_from', 'sum_to'], 'required'],
+            [['id_wallet_from', 'id_wallet_to', 'sum_from', 'sum_to'], 'required'],
             [['id_wallet_from', 'id_wallet_to'], 'default', 'value' => null],
             [['id_wallet_from', 'id_wallet_to'], 'integer'],
             [['walletFrom', 'walletTo', 'timestamp'], 'safe'],
@@ -75,5 +75,24 @@ class Transaction extends \yii\db\ActiveRecord
     public function getWalletTo()
     {
         return $this->hasOne(Wallets::className(), ['id' => 'id_wallet_to']);
+    }
+
+    public function save($runValidation = true, $attributeNames = null)
+    {
+        $sumFrom = $this->getWalletFrom()->one();
+        $sumTo = $this->getWalletTo()->one();
+
+        $sumFrom->sum -= $this->sum_from;
+        $sumTo->sum += $this->sum_to;
+
+        if (
+            $sumFrom->sum >= 0 &&
+            $sumFrom->save() &&
+            $sumTo->save()
+        ) {
+            return parent::save($runValidation, $attributeNames);
+        }
+
+        return false;
     }
 }

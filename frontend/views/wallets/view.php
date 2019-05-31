@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?php if ($model->id_user == Yii::$app->user->id) {?>
+        <?php if ($model->id_user == Yii::$app->user->id): ?>
             <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
             <?= Html::a('Delete', ['delete', 'id' => $model->id], [
                 'class' => 'btn btn-danger',
@@ -25,9 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'method' => 'post',
                 ],
             ]) ?>
-        <?php } else { ?>
-            <?= Html::a('Send', ['send', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?php } ?>
+        <?php endif; ?>
     </p>
 
     <?= DetailView::widget([

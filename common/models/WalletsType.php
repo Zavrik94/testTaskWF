@@ -74,8 +74,18 @@ class WalletsType extends \yii\db\ActiveRecord
         return array_flip(static::$types);
     }
 
-    public static function convert(int $idWalletFrom, int $idWalletTo, float $sumFrom) {
+    public static function convertByTypes(int $idTypeFrom, int $idTypeTo, float $sum) {
         Yii::$app->runAction('/coinlayer');
+
+        $curFrom = WalletsType::findOne(['id' => $idTypeFrom])->rates;
+        $curTo = WalletsType::findOne(['id' => $idTypeTo])->rates;
+
+        return $sum * $curFrom / $curTo;
+    }
+
+    public static function convertByWalletsIds(int $idWalletFrom, int $idWalletTo, float $sumFrom) {
+        Yii::$app->runAction('/coinlayer');
+
         $curFrom = Wallets::findOne(['id' => $idWalletFrom])->getWalletsType()->one()->rates;
         $curTo = Wallets::findOne(['id' => $idWalletTo])->getWalletsType()->one()->rates;
 

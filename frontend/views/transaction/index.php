@@ -101,9 +101,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'id',
                 'id_wallet_from',
                 'id_wallet_to',
-                'timestamp',
                 'sum_from',
-                //'sum_to',
+                'sum_to',
+                [
+                    'attribute' => 'timestamp',
+                    'format' => ['date', 'php:M d Y H:i e'],
+                ],
             ],
         ]); ?>
     <?php Pjax::end(); ?>

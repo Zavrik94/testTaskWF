@@ -35,10 +35,10 @@ class TransactionController extends Controller
             if ($wallet['id_user'] == Yii::$app->user->id) {
                 $myWallets[$wallet['id']] = $wallet['id'] . '. ' . $wallet['wallet_name'] .
                     '(' . $types[$wallet['id_wallets_type']] . ':' . $wallet['sum'] . ')';
-            } else {
-                $receiverWallets[$wallet['id']] =  $wallet['id'] . '. ' . $wallet['user']['email'] .
-                    '(' . $types[$wallet['id_wallets_type']] . ')';
             }
+
+            $receiverWallets[$wallet['id']] =  $wallet['id'] . '. ' . $wallet['user']['email'] .
+                '(' . $types[$wallet['id_wallets_type']] . ')';
         }
 
         return $this->render('index', [
@@ -59,7 +59,8 @@ class TransactionController extends Controller
             $model->id_wallet_from = (int)$post['Transaction']['walletFrom'];
             $model->id_wallet_to = (int)$post['Transaction']['walletTo'];
             $model->sum_from = (float)$post['Transaction']['sum_from'];
-            $model->sum_to = WalletsType::convert($model->id_wallet_from, $model->id_wallet_to, $model->sum_from);
+            $model->sum_to = WalletsType::convertByWalletsIds(
+                $model->id_wallet_from, $model->id_wallet_to, $model->sum_from);
 
             $isSuccess = $model->save();
         }
