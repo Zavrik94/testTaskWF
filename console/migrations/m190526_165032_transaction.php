@@ -16,7 +16,7 @@ class m190526_165032_transaction extends Migration
             'id' => $this->primaryKey(),
             'id_wallet_from' => $this->integer()->notNull(),
             'id_wallet_to' => $this->integer()->notNull(),
-            'timestamp' => $this->timestamp()->notNull(),
+            'timestamp' => $this->timestamp()->notNull()->defaultExpression("now()"),
             'sum_from' => $this->float()->notNull(),
             'sum_to' => $this->float()->notNull(),
         ]);

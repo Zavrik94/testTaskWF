@@ -53,10 +53,10 @@ class TransactionSearch extends Transaction
         $query = Transaction::find()
             ->joinWith([
             'walletFrom wf' => function($q) {
-                $q->joinWith('User uf', false);
+                $q->joinWith('user uf', false);
             },
             'walletTo wt' => function($q) {
-                $q->joinWith('User ut', false);
+                $q->joinWith('user ut', false);
             }], false);
 
         //'$my_wallet_name $my_wallet_id($my_wallet_cur:$my_wallet_sum)'

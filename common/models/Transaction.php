@@ -19,6 +19,9 @@ use Yii;
  */
 class Transaction extends \yii\db\ActiveRecord
 {
+    public $walletFrom;
+    public $walletTo;
+
     /**
      * {@inheritdoc}
      */
@@ -33,10 +36,10 @@ class Transaction extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_wallet_from', 'id_wallet_to', 'timestamp', 'sum_from', 'sum_to'], 'required'],
+            [['walletFrom', 'walletTo', 'id_wallet_from', 'id_wallet_to', 'timestamp', 'sum_from', 'sum_to'], 'required'],
             [['id_wallet_from', 'id_wallet_to'], 'default', 'value' => null],
             [['id_wallet_from', 'id_wallet_to'], 'integer'],
-            [['timestamp'], 'safe'],
+            [['walletFrom', 'walletTo', 'timestamp'], 'safe'],
             [['sum_from', 'sum_to'], 'number'],
             [['id_wallet_from'], 'exist', 'skipOnError' => true, 'targetClass' => Wallets::className(), 'targetAttribute' => ['id_wallet_from' => 'id']],
             [['id_wallet_to'], 'exist', 'skipOnError' => true, 'targetClass' => Wallets::className(), 'targetAttribute' => ['id_wallet_to' => 'id']],
