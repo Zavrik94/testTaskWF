@@ -93,7 +93,7 @@ class TransactionSearch extends Transaction
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
+            'transaction.id' => $this->id,
             'id_wallet_from' => $this->id_wallet_from,
             'id_wallet_to' => $this->id_wallet_to,
             'timestamp' => $this->timestamp,

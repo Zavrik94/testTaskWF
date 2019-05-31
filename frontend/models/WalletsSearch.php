@@ -22,7 +22,7 @@ class WalletsSearch extends Wallets
     public function rules()
     {
         return [
-            [['id', 'id_user', 'id_wallets_type'], 'integer'],
+            [['id'], 'integer'],
             [['short_name'], 'string', 'length' => [1, 5]],
             [['email'], 'string'],
             [['wallet_name'], 'safe'],
@@ -79,7 +79,7 @@ class WalletsSearch extends Wallets
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
+            'wallets.id' => $this->id,
             'id_user' => $this->id_user,
             'sum' => $this->sum,
         ]);
