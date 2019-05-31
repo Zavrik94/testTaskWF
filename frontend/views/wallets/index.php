@@ -26,10 +26,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             'id',
             [
-                    'attribute' => 'email',
-                    'value' => function($data) {
-                        return $data->user->email;
-                    },
+                'attribute' => 'email',
+                'value' => function($data) {
+                    return $data->user->email;
+                },
             ],
             'wallet_name',
             [

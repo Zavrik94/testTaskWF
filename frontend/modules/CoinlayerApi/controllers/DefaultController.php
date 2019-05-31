@@ -3,6 +3,7 @@
 namespace frontend\modules\CoinlayerApi\controllers;
 
 use common\models\WalletsType;
+use DateTime;
 use yii\web\Controller;
 
 /**
@@ -15,20 +16,29 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
-        $wtype = new WalletsType();
-
         $response = file_get_contents(getenv('CL_URL'));
         $response = json_decode($response, true);
-        $dateTime = new \DateTime("@{$response['timestamp']}");
+
+        $dateTime = new DateTime("@{$response['timestamp']}");
+        $dateTime = $dateTime->format('Y-m-d H:i:s');
 
         if ($response['success'] === true) {
-            $curRates = $wtype::find()->all();
+            $curRates = WalletsType::find()->all();
             foreach ($curRates as &$cur) {
-                if ($cur['is_update'] && $cur['short_name'] !== 'USD' && $cur['rates'] !== $response['rates'][$cur['short_name']]) {
-                    $cur->rates = $response['rates'][$cur['short_name']];
-                    $cur->update_timestamp = $dateTime->format('Y-m-d H:i:s');
+                if (
+                    $cur->is_update &&
+                    $cur->short_name !== 'USD' &&
+                    $cur->rates !== $response['rates'][$cur->short_name]
+                ) {
+                    $cur->rates = $response['rates'][$cur->short_name];
+                    $cur->update_timestamp = $dateTime;
+                    if (!$cur->save()) {
+                        throw new yii\base\Exception("Failed to update $cur->short_name");
+                    }
                 }
             }
         }
+
+        return "Updated at $dateTime";
     }
 }
