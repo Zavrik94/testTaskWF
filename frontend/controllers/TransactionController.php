@@ -53,7 +53,7 @@ class TransactionController extends Controller
     {
         $model = new Transaction();
         $post = Yii::$app->request->post();
-        $isSuccess = $model->load($post);
+        $isSuccess = $model->load($post) && $post['Transaction']['walletFrom'] && $post['Transaction']['walletTo'];
 
         if ($isSuccess) {
             $model->id_wallet_from = (int)$post['Transaction']['walletFrom'];
