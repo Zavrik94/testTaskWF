@@ -21,6 +21,7 @@ class WalletsTypeSearch extends WalletsType
             [['type_name', 'short_name', 'update_timestamp'], 'safe'],
             [['rates'], 'number'],
             [['is_update'], 'boolean'],
+            [['update_timestamp'], 'datetime']
         ];
     }
 
