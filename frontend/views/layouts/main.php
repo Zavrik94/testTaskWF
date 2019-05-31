@@ -36,11 +36,8 @@ AppAsset::register($this);
         ],
     ]);
     $menuItems = [
-        ['label' => 'GII', 'url' => ['/gii']],
         ['label' => 'Home', 'url' => ['/site']],
-        ['label' => 'About', 'url' => ['/site/about']],
         ['label' => 'Rates', 'url' => ['/wallet-type']],
-
         ['label' => 'Contact', 'url' => ['/site/contact']],
     ];
     if (Yii::$app->user->isGuest) {

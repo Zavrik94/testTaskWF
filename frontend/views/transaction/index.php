@@ -105,29 +105,29 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Sender email',
                 'attribute' => 'email_from',
                 'value' => function($data) {
-//                        echo '<pre>'; var_dump($data->getWalletFrom()->one()); echo '</pre>'; die();
-                    return $data->walletFrom->user->email;
+//                        echo '<pre>'; var_dump($data->getWalletFrom()->one()->getUser()->one()->email); echo '</pre>'; die();
+                    return $data->getWalletFrom()->one()->getUser()->one()->email;
                 },
             ],
             [
                 'label' => 'Recipient email',
                 'attribute' => 'email_to',
                 'value' => function($data) {
-                    return $data->walletTo[0]->user->email;
+                    return $data->getWalletTo()->one()->getUser()->one()->email;
                 },
             ],
             [
                 'label' => 'Currency of wallet-sender',
                 'attribute' => 'cur_from',
                 'value' => function($data) {
-                    return $data->walletFrom[0]->walletsType->short_name;
+                    return $data->getWalletFrom()->one()->getWalletsType()->one()->short_name;
                 },
             ],
             [
                 'label' => 'Currency of wallet-recipient',
                 'attribute' => 'cur_to',
                 'value' => function($data) {
-                    return $data->walletTo[0]->walletsType->short_name;
+                    return $data->getWalletTo()->one()->getWalletsType()->one()->short_name;
                 },
             ],
             [
@@ -142,14 +142,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Wallet-sender custom name',
                 'attribute' => 'sender_cname',
                 'value' => function($data) {
-                    return $data->walletFrom[0]->wallet_name;
+                    return $data->getWalletFrom()->one()->wallet_name;
                 },
             ],
             [
                 'label' => 'Wallet-recipient custom name',
                 'attribute' => 'recipient_cname',
                 'value' => function($data) {
-                    return $data->walletTo[0]->wallet_name;
+                    return $data->getWalletTo()->one()->wallet_name;
                 },
             ],
         ],
