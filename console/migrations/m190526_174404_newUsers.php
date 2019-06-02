@@ -18,10 +18,10 @@ class m190526_174404_newUsers extends Migration
             ['admin', Yii::$app->security->generateRandomString(), Yii::$app->getSecurity()->generatePasswordHash('asdasd'), 'admin@admin.com', '10', '1558893239', '1558893239'],
         ]);
 
-        $this->batchInsert('{{%wallets}}', ['id_user', 'id_wallets_type', 'sum'], [
-            [1, 1, 1000],
-            [2, 1, 1000],
-            [3, 1, 1000],
+        $this->batchInsert('{{%wallets}}', ['id_user', 'id_wallets_type', 'sum', 'wallet_name'], [
+            [1, 1, 1000, 'Default USD Wallet'],
+            [2, 1, 1000, 'Default USD Wallet'],
+            [3, 1, 1000, 'Default USD Wallet'],
         ]);
     }
 
