@@ -12,12 +12,12 @@ use common\models\Transaction;
  */
 class TransactionSearch extends Transaction
 {
-    public $email_from;
-    public $email_to;
-    public $cur_from;
-    public $cur_to;
-    public $sender_cname;
-    public $recipient_cname;
+    public $emailFrom;
+    public $emailTo;
+    public $shortNameFrom;
+    public $shortNameTo;
+    public $nameFrom;
+    public $nameTo;
 
     /**
      * {@inheritdoc}
@@ -26,15 +26,8 @@ class TransactionSearch extends Transaction
     {
         return [
             [['id', 'id_wallet_from', 'id_wallet_to'], 'integer'],
-            [[
-                'timestamp',
-                'email_from',
-                'email_to',
-                'cur_from',
-                'cur_to',
-                'sender_cname',
-                'recipient_cname'],
-            'safe'],
+            [['emailFrom', 'emailTo'], 'string'],
+            [['shortNameFrom', 'shortNameTo', 'nameFrom', 'nameTo'], 'string'],
             [['sum_from', 'sum_to'], 'number'],
         ];
     }
@@ -60,6 +53,15 @@ class TransactionSearch extends Transaction
         $pageSize = 50;
 
         $query = Transaction::find()
+            ->select('
+                transaction.*,
+                uf.email as emailFrom,
+                ut.email as emailTo,
+                wtt.short_name as shortNameTo,
+                wtf.short_name as shortNameFrom,
+                wf.wallet_name as nameFrom,
+                wt.wallet_name as nameTo
+            ')
             ->joinWith([
                 'walletFrom wf' => function($q) {
                     $q->joinWith(['user uf', 'walletsType wtf']);
@@ -68,8 +70,12 @@ class TransactionSearch extends Transaction
                     $q->joinWith(['user ut', 'walletsType wtt']);
                 },
             ])
-            ->where(['uf.email' => Yii::$app->user->identity->email])
-            ->orderBy(['id' => SORT_DESC])
+            ->where(['or',
+                ['wf.id_user' => Yii::$app->user->id],
+                ['wt.id_user' => Yii::$app->user->id],
+            ])
+            ->orderBy(['transaction.id' => SORT_DESC])
+            ->asArray()
             ->limit($pageSize)
         ;
 
@@ -81,7 +87,28 @@ class TransactionSearch extends Transaction
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => ['pageSize' => $pageSize],
+            'sort' => [
+                'defaultOrder' => ['id' => SORT_DESC],
+//                'attributes' => [
+//                    'emailTo' => [
+//                        'asc' => ['ut.email' => SORT_ASC],
+//                        'desc' => ['ut.email' => SORT_DESC],
+//                    ],
+////                    'emailTo',
+////                    'shortNameFrom',
+////                    'shortNameTo',
+////                    'nameFrom',
+////                    'nameTo',
+//                    'id',
+//                    'sum_from',
+//                    'sum_to',
+//                ]
+            ]
         ]);
+
+//        $dataProvider->sort->attributes['short_name'] = [
+//
+//        ];
 
         $this->load($params);
 
@@ -94,13 +121,17 @@ class TransactionSearch extends Transaction
         // grid filtering conditions
         $query->andFilterWhere([
             'transaction.id' => $this->id,
-            'id_wallet_from' => $this->id_wallet_from,
-            'id_wallet_to' => $this->id_wallet_to,
-            'timestamp' => $this->timestamp,
             'sum_from' => $this->sum_from,
             'sum_to' => $this->sum_to,
         ]);
-//        $query->andFilterWhere('ilike', 'uf.email', $this->email_from);
+
+        $query->andFilterWhere(['ilike', 'ut.email', $this->emailTo])
+            ->andFilterWhere(['ilike', 'uf.email', $this->emailFrom])
+            ->andFilterWhere(['ilike', 'wtt.short_name', $this->shortNameTo])
+            ->andFilterWhere(['ilike', 'wtf.short_name', $this->shortNameFrom])
+            ->andFilterWhere(['ilike', 'wt.wallet_name', $this->nameTo])
+            ->andFilterWhere(['ilike', 'wf.wallet_name', $this->nameFrom])
+        ;
 
         return $dataProvider;
     }

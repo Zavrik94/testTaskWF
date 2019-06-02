@@ -86,7 +86,8 @@ class WalletsSearch extends Wallets
 
         $query->andFilterWhere(['ilike', 'wallet_name', $this->wallet_name])
             ->andFilterWhere(['ilike', 'wt.short_name', $this->short_name])
-            ->andFilterWhere(['ilike', 'usr.email', $this->email]);
+            ->andFilterWhere(['ilike', 'usr.email', $this->email])
+        ;
 
         return $dataProvider;
     }
