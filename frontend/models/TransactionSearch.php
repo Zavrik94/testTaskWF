@@ -74,7 +74,6 @@ class TransactionSearch extends Transaction
                 ['wf.id_user' => Yii::$app->user->id],
                 ['wt.id_user' => Yii::$app->user->id],
             ])
-            ->orderBy(['transaction.id' => SORT_DESC])
             ->asArray()
             ->limit($pageSize)
         ;
@@ -87,28 +86,60 @@ class TransactionSearch extends Transaction
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => ['pageSize' => $pageSize],
-            'sort' => [
-                'defaultOrder' => ['id' => SORT_DESC],
-//                'attributes' => [
-//                    'emailTo' => [
-//                        'asc' => ['ut.email' => SORT_ASC],
-//                        'desc' => ['ut.email' => SORT_DESC],
-//                    ],
-////                    'emailTo',
-////                    'shortNameFrom',
-////                    'shortNameTo',
-////                    'nameFrom',
-////                    'nameTo',
-//                    'id',
-//                    'sum_from',
-//                    'sum_to',
-//                ]
-            ]
         ]);
 
-//        $dataProvider->sort->attributes['short_name'] = [
-//
-//        ];
+        $dataProvider->setSort([
+            'attributes' => [
+                'id' => [
+                    'asc' => ['id' => SORT_ASC],
+                    'desc' => ['id' => SORT_DESC],
+                    'default' => SORT_ASC
+                ],
+                'emailFrom' => [
+                    'asc' => ['emailFrom' => SORT_ASC],
+                    'desc' => ['emailFrom' => SORT_DESC],
+                    'default' => SORT_ASC
+                ],
+                'emailTo' => [
+                    'asc' => ['emailTo' => SORT_ASC],
+                    'desc' => ['emailTo' => SORT_DESC],
+                    'default' => SORT_ASC
+                ],
+                'shortNameFrom' => [
+                    'asc' => ['shortNameFrom' => SORT_ASC],
+                    'desc' => ['shortNameFrom' => SORT_DESC],
+                    'default' => SORT_ASC
+                ],
+                'shortNameTo' => [
+                    'asc' => ['shortNameTo' => SORT_ASC],
+                    'desc' => ['shortNameTo' => SORT_DESC],
+                    'default' => SORT_ASC
+                ],
+                'sum_from' => [
+                    'asc' => ['sum_from' => SORT_ASC],
+                    'desc' => ['sum_from' => SORT_DESC],
+                    'default' => SORT_ASC
+                ],
+                'sum_to' => [
+                    'asc' => ['sum_to' => SORT_ASC],
+                    'desc' => ['sum_to' => SORT_DESC],
+                    'default' => SORT_ASC
+                ],
+                'nameFrom' => [
+                    'asc' => ['nameFrom' => SORT_ASC],
+                    'desc' => ['nameFrom' => SORT_DESC],
+                    'default' => SORT_ASC
+                ],
+                'nameTo' => [
+                    'asc' => ['nameTo' => SORT_ASC],
+                    'desc' => ['nameTo' => SORT_DESC],
+                    'default' => SORT_ASC
+                ],
+            ],
+            'defaultOrder' => [
+                'id' => SORT_DESC
+            ]
+        ]);
 
         $this->load($params);
 
